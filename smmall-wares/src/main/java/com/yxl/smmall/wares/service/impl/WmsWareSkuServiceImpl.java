@@ -25,8 +25,6 @@ import com.yxl.smmall.wares.service.WmsWareOrderTaskDetailService;
 import com.yxl.smmall.wares.service.WmsWareOrderTaskService;
 import com.yxl.smmall.wares.service.WmsWareSkuService;
 import lombok.Data;
-import org.springframework.amqp.core.Message;
-import org.springframework.amqp.rabbit.annotation.RabbitListener;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -43,7 +41,7 @@ import java.util.stream.Collectors;
  * 1，下订单成功，订单过期没有支付系统自动取消，被用户手动取消，都要解锁库存
  * 2，下订单成功，库存锁定成功，接下来的业务嗲用失败，导致订单回滚，之前锁定的库存就要自动解锁
  */
-@RabbitListener(queues = "stock-lock")
+
 @Service("wmsWareSkuService")
 public class WmsWareSkuServiceImpl extends ServiceImpl<WmsWareSkuDao, WmsWareSkuEntity> implements WmsWareSkuService {
     @Autowired
@@ -74,50 +72,12 @@ public class WmsWareSkuServiceImpl extends ServiceImpl<WmsWareSkuDao, WmsWareSku
      * 1,库存自动解锁，下订单成功，库存锁定成功，接下来的业务调用失败，导致订单回滚，之前锁定的库存就要自动解锁
      * 2，订单失败，锁库存失败
      *
-     * @param to
-     * @param message
      */
-    public void handlerStockLockerRelease(SrockLockedTo to, Message message) {
-        System.out.println("收到解锁库存的消息");
-        Long id = to.getId();
-        StockDetailTo detail = to.getDetail();
-        Long detailId = detail.getId();
-        //解锁操作：
-//        1，查询数据库关于这个订单的锁定库存信息
-//            有：证明库存锁定成功了
-//                1，没有这个订单，必须解锁库存
-//                 2，有这个订单，不是解锁库存
-//                    订单状态：已取消，及所库存
-//                      没有取消，不能解锁
-//            没有：库存锁定失败了，库存回滚了，这种情况无需解锁；
-        WmsWareOrderTaskDetailEntity byId = wmsWareOrderTaskDetailService.getById(detailId);
-        if (byId != null) {
-            //现需要解锁
-            Long toId = to.getId();
-            WmsWareOrderTaskEntity taskServiceById = wmsWareOrderTaskService.getById(toId);
-            String orderSn = taskServiceById.getOrderSn();
-            R r = orderFegin.getOrderStatus(orderSn);
-            if (r.getCode() == 0) {
-                OrderVo data = r.getData(new TypeReference<OrderVo>() {
-                });
-
-                if (data.getStatus() == OrderStatusEnum.CANCLED.getCode()) {
-                    //订单应尽被取消，才能解锁库存
-                    unlockedStock(byId.getSkuId(),byId.getWareId(),byId.getSkuNum(),toId) ;
-                }
-            }
-
-
-        } else {
-            //无需解锁
-        }
-    }
 
     private void unlockedStock(Long skuId, Long wareId, Integer lockNumber, Long taskDetail) {
-            wmsWareSkuDao.unlockStock(skuId, wareId,lockNumber);
+        wmsWareSkuDao.unlockStock(skuId, wareId,lockNumber);
 
 
-            
     }
 
 
@@ -237,6 +197,50 @@ public class WmsWareSkuServiceImpl extends ServiceImpl<WmsWareSkuDao, WmsWareSku
         return true;
     }
 
+    @Override
+    public void unlockStock(SrockLockedTo to) {
+
+        System.out.println("收到解锁库存的消息");
+        Long id = to.getId();
+        StockDetailTo detail = to.getDetail();
+        Long detailId = detail.getId();
+        //解锁操作：
+//        1，查询数据库关于这个订单的锁定库存信息
+//            有：证明库存锁定成功了
+//                1，没有这个订单，必须解锁库存
+//                 2，有这个订单，不是解锁库存
+//                    订单状态：已取消，及所库存
+//                      没有取消，不能解锁
+//            没有：库存锁定失败了，库存回滚了，这种情况无需解锁；
+        WmsWareOrderTaskDetailEntity byId = wmsWareOrderTaskDetailService.getById(detailId);
+        if (byId != null) {
+            //现需要解锁
+            Long toId = to.getId();
+            WmsWareOrderTaskEntity taskServiceById = wmsWareOrderTaskService.getById(toId);
+            String orderSn = taskServiceById.getOrderSn();
+//           TODO:这里有一个隐藏的错误，由于Order服务设置了拦截器，将该路径进行了拦截，验证失败后跳转到登陆页面，在拦截器中对这个路径放行
+            R r = orderFegin.getOrderStatus(orderSn);
+            if (r.getCode() == 0) {
+                OrderVo data = r.getData(new TypeReference<OrderVo>() {
+                });
+
+                if (data == null || data.getStatus() == OrderStatusEnum.CANCLED.getCode()) {
+                    //订单应尽被取消，才能解锁库存
+                    unlockedStock(byId.getSkuId(), byId.getWareId(), byId.getSkuNum(), toId);
+                } else {
+                    //消息拒绝以后重新放在队列里面，让别人继续消费解锁
+                    throw new RuntimeException("远程服务失败");
+                }
+            }
+        } else {
+            //无需解锁
+        }
+
+
+    }
+
+}
+
     @Data
     class SkuWareHasItem {
         private Long skuId;
@@ -244,4 +248,3 @@ public class WmsWareSkuServiceImpl extends ServiceImpl<WmsWareSkuDao, WmsWareSku
         private List<Long> wareIds;
     }
 
-}

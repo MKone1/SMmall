@@ -23,10 +23,7 @@ public class RabbitMQConfig {
     public MessageConverter messageConverter() {
         return new Jackson2JsonMessageConverter();
     }
-    @RabbitListener(queues = "stock.release.stock.queue")
-    public void handle( Message message){
 
-    }
 
     @Bean
     public Exchange stockEventExchange() {

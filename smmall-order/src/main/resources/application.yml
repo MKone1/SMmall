@@ -29,6 +29,7 @@ spring:
     listener:
       simple:
        acknowledge-mode: manual
+       #启动手动ACK机制，
 mybatis-plus:
   mapper-locations: classpath:/mapper/**/*.xml
   global-config:
