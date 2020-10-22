@@ -114,7 +114,9 @@ public class WmsWareSkuServiceImpl extends ServiceImpl<WmsWareSkuDao, WmsWareSku
     }
 
     private void unlockedStock(Long skuId, Long wareId, Integer lockNumber, Long taskDetail) {
-            wmsWareSkuDao.unlockStock(skuId, wareId,lockNumber,taskDetail);
+            wmsWareSkuDao.unlockStock(skuId, wareId,lockNumber);
+
+
             
     }
 

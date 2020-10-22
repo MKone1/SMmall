@@ -1,0 +1,22 @@
+spring:
+  cloud:
+    nacos:
+      discovery:
+        server-addr: 127.0.0.1:8848
+    alicloud:
+      access-key: LTAI4G6QDbR74uMEia33TDjd
+      secret-key: 8aRa6y2xqVXZ3664QaN6U2n89ao5Xm
+      oss:
+        bucket: smmall-oos
+        endpoint: oss-cn-chengdu.aliyuncs.com
+      sms:
+        host: http://smsmsgs.market.alicloudapi.com
+        path: /smsmsgs
+        skin: 1
+        sign: 1
+        appcode: fa751ba6a2dc4aef9d02e34536facffb
+#  93b7e19861a24c519a7548b17dc16d75
+  application:
+    name: smmall-three-service
+server:
+  port: 30000

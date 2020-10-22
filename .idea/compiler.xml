@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="CompilerConfiguration">
+    <annotationProcessing>
+      <profile default="true" name="Default" enabled="true" />
+      <profile name="Maven default annotation processors profile" enabled="true">
+        <sourceOutputDir name="target/generated-sources/annotations" />
+        <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
+        <outputRelativeToContentRoot value="true" />
+        <module name="SMmall-common" />
+        <module name="smmall-auth-service" />
+        <module name="smmall-gateway" />
+        <module name="renren-fast" />
+        <module name="smmall-sso-test-server" />
+        <module name="smmall-product" />
+        <module name="renren-generator" />
+        <module name="smmall-three-service" />
+        <module name="smmall-sso-test-client2" />
+        <module name="smmall-cart" />
+        <module name="smmall-order" />
+        <module name="spring-jdbc" />
+        <module name="smmall-search" />
+        <module name="smmall-wares" />
+        <module name="smmall-coupon" />
+        <module name="smmall-member" />
+        <module name="smmall-sso-test-client" />
+      </profile>
+    </annotationProcessing>
+    <bytecodeTargetLevel>
+      <module name="com.yxl.common" target="1.5" />
+      <module name="smmall-ware" target="1.8" />
+      <module name="spring-jdbc" target="1.8" />
+    </bytecodeTargetLevel>
+  </component>
+  <component name="JavacSettings">
+    <option name="ADDITIONAL_OPTIONS_OVERRIDE">
+      <module name="renren-fast" options="-parameters" />
+      <module name="renren-generator" options="-parameters" />
+      <module name="smmall-auth-service" options="-parameters" />
+      <module name="smmall-cart" options="-parameters" />
+      <module name="smmall-coupon" options="-parameters" />
+      <module name="smmall-gateway" options="-parameters" />
+      <module name="smmall-member" options="-parameters" />
+      <module name="smmall-order" options="-parameters" />
+      <module name="smmall-product" options="-parameters" />
+      <module name="smmall-search" options="-parameters" />
+      <module name="smmall-sso-test-client" options="-parameters" />
+      <module name="smmall-sso-test-client2" options="-parameters" />
+      <module name="smmall-sso-test-server" options="-parameters" />
+      <module name="smmall-three-service" options="-parameters" />
+      <module name="smmall-ware" options="-parameters" />
+      <module name="smmall-wares" options="-parameters" />
+      <module name="spring-jdbc" options="-parameters" />
+    </option>
+  </component>
+</project>
