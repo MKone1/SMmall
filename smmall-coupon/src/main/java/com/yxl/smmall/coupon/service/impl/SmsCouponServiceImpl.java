@@ -1,7 +1,11 @@
 package com.yxl.smmall.coupon.service.impl;
 
 import org.springframework.stereotype.Service;
+
+import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
+
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
@@ -24,6 +28,20 @@ public class SmsCouponServiceImpl extends ServiceImpl<SmsCouponDao, SmsCouponEnt
         );
 
         return new PageUtils(page);
+    }
+
+    /**
+     * 查询所有的优惠卷
+     * @return
+     */
+    @Override
+    public List<SmsCouponEntity> getCoupon() {
+        List<SmsCouponEntity> list = this.baseMapper.selectList(new QueryWrapper<SmsCouponEntity>().lambda());
+        List<SmsCouponEntity> collect = list.stream().filter(item -> item.getPublish() == 1
+                && item.getUseCount()< item.getNum()).collect(Collectors.toList());
+        return collect;
+
+
     }
 
 }

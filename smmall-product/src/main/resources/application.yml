@@ -1,0 +1,24 @@
+#spring:
+#  cloud:
+#    alicloud:
+#      access-key:
+#      secret-key:
+#      oss:
+#        endpoint:
+#
+
+# thymeleaf的配置：
+
+spring:
+  redis:
+    password: 123456
+    host: 192.168.43.99
+    port: 6379
+  thymeleaf:
+    cache: false
+  session:
+    store-type: redis
+
+server:
+  port: 11111
+

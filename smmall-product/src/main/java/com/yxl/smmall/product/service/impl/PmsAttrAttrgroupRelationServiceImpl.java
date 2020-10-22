@@ -13,6 +13,9 @@ import com.yxl.smmall.product.entity.PmsAttrAttrgroupRelationEntity;
 import com.yxl.smmall.product.service.PmsAttrAttrgroupRelationService;
 
 
+/**
+ * @author SADSADSD
+ */
 @Service("pmsAttrAttrgroupRelationService")
 public class PmsAttrAttrgroupRelationServiceImpl extends ServiceImpl<PmsAttrAttrgroupRelationDao, PmsAttrAttrgroupRelationEntity> implements PmsAttrAttrgroupRelationService {
 

@@ -14,7 +14,8 @@ import com.yxl.smmall.product.service.PmsSpuInfoDescService;
 
 
 @Service("pmsSpuInfoDescService")
-public class PmsSpuInfoDescServiceImpl extends ServiceImpl<PmsSpuInfoDescDao, PmsSpuInfoDescEntity> implements PmsSpuInfoDescService {
+public class PmsSpuInfoDescServiceImpl extends ServiceImpl<PmsSpuInfoDescDao, PmsSpuInfoDescEntity>
+        implements PmsSpuInfoDescService {
 
     @Override
     public PageUtils queryPage(Map<String, Object> params) {
@@ -24,6 +25,11 @@ public class PmsSpuInfoDescServiceImpl extends ServiceImpl<PmsSpuInfoDescDao, Pm
         );
 
         return new PageUtils(page);
+    }
+
+    @Override
+    public void saveSpuInfoDesc(PmsSpuInfoDescEntity spuInfoDescEntity) {
+        this.baseMapper.insert(spuInfoDescEntity);
     }
 
 }

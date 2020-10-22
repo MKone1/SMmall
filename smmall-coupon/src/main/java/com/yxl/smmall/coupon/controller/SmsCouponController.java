@@ -1,21 +1,17 @@
 package com.yxl.smmall.coupon.controller;
 
-import java.util.Arrays;
-import java.util.Map;
-
+import com.yxl.common.utils.PageUtils;
+import com.yxl.common.utils.R;
+import com.yxl.smmall.coupon.entity.SmsCouponEntity;
+import com.yxl.smmall.coupon.service.SmsCouponService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.cloud.context.config.annotation.RefreshScope;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
-import com.yxl.smmall.coupon.entity.SmsCouponEntity;
-import com.yxl.smmall.coupon.service.SmsCouponService;
-import com.yxl.common.utils.PageUtils;
-import com.yxl.common.utils.R;
+import java.util.Arrays;
+import java.util.List;
+import java.util.Map;
 
 
 
@@ -32,6 +28,8 @@ import com.yxl.common.utils.R;
 public class SmsCouponController {
     @Autowired
     private SmsCouponService smsCouponService;
+
+
     /**
      * 测试nacos配置中心
       */
@@ -46,17 +44,21 @@ return R.ok().put("name",name).put("age",age);
 
 
 
-/**
- * 测试nacos注册服务
- *
- */
-@RequestMapping("/member/list")
-public R membercoupons(){
-    SmsCouponEntity smsCouponEntity = new SmsCouponEntity();
-    smsCouponEntity.setCouponName("满100减8");
-    return R.ok().put("coupons",Arrays.asList(smsCouponEntity));
-}
-
+    /**
+     * 测试nacos注册服务
+     *
+     */
+    @RequestMapping("/member/list")
+    public R membercoupons() {
+        SmsCouponEntity smsCouponEntity = new SmsCouponEntity();
+        smsCouponEntity.setCouponName("满100减8");
+        return R.ok().put("coupons", Arrays.asList(smsCouponEntity));
+    }
+    @GetMapping("/getCoupon")
+    public R getCoupon(){
+      List<SmsCouponEntity> list = smsCouponService.getCoupon();
+      return R.ok().put("getCouponList",list);
+    }
 
 
     /**

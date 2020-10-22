@@ -36,7 +36,7 @@ public class WmsPurchaseDetailController {
     @RequestMapping("/list")
    // @RequiresPermissions("wares:wmspurchasedetail:list")
     public R list(@RequestParam Map<String, Object> params){
-        PageUtils page = wmsPurchaseDetailService.queryPage(params);
+        PageUtils page = wmsPurchaseDetailService.queryPageByCondition(params);
 
         return R.ok().put("page", page);
     }

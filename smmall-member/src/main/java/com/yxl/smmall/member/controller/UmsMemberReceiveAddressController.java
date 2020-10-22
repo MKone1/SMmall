@@ -1,14 +1,11 @@
 package com.yxl.smmall.member.controller;
 
 import java.util.Arrays;
+import java.util.List;
 import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import com.yxl.smmall.member.entity.UmsMemberReceiveAddressEntity;
 import com.yxl.smmall.member.service.UmsMemberReceiveAddressService;
@@ -29,6 +26,16 @@ import com.yxl.common.utils.R;
 public class UmsMemberReceiveAddressController {
     @Autowired
     private UmsMemberReceiveAddressService umsMemberReceiveAddressService;
+
+    /**
+     * 信息
+     */
+    @RequestMapping("/user/{id}")
+    //@RequiresPermissions("member:umsmemberreceiveaddress:info")
+    public R infoByUserId(@PathVariable("id") Long id){
+        List<UmsMemberReceiveAddressEntity> umsMemberReceiveAddress = umsMemberReceiveAddressService.getByUserId(id);
+        return R.ok().put("umsMemberReceiveAddress", umsMemberReceiveAddress);
+    }
 
     /**
      * 列表

@@ -9,6 +9,7 @@ import java.io.Serializable;
 import java.util.Date;
 import java.util.List;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.Data;
 
 /**
@@ -77,7 +78,22 @@ public class PmsCategoryEntity implements Serializable {
 	 *     String value() default "";
 	 *
 	 *     boolean exist() default true;
+	 *
+	 *     @JsonInclude
+	 *      public static enum Include {
+	 *         ALWAYS,
+	 *         NON_NULL,
+	 *         NON_ABSENT,
+	 *         NON_EMPTY,
+	 *         NON_DEFAULT,
+	 *         CUSTOM,
+	 *         USE_DEFAULTS;
+	 *
+	 *         private Include() {
+	 *         }
+	 *     }
 	 */
+	@JsonInclude(JsonInclude.Include.NON_EMPTY)
 	@TableField(exist = false)
 	private List<PmsCategoryEntity> children;
 }

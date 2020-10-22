@@ -2,8 +2,12 @@ package com.yxl.smmall.wares.service;
 
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.yxl.common.utils.PageUtils;
+import com.yxl.common.vo.LockStockVo;
+import com.yxl.common.vo.SkuHasStockVO;
+import com.yxl.common.vo.WareSkuLockVo;
 import com.yxl.smmall.wares.entity.WmsWareSkuEntity;
 
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -16,5 +20,11 @@ import java.util.Map;
 public interface WmsWareSkuService extends IService<WmsWareSkuEntity> {
 
     PageUtils queryPage(Map<String, Object> params);
+
+    PageUtils queryPageByCondition(Map<String, Object> params);
+
+    List<SkuHasStockVO> getSkusHasStock(List<Long> skuIdList);
+
+ Boolean orderlockstock(WareSkuLockVo vo);
 }
 

@@ -13,5 +13,6 @@ import org.apache.ibatis.annotations.Mapper;
  */
 @Mapper
 public interface UmsMemberLevelDao extends BaseMapper<UmsMemberLevelEntity> {
-	
+
+    UmsMemberLevelEntity getDefaultLevel();
 }

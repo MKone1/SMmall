@@ -4,6 +4,7 @@ import com.baomidou.mybatisplus.extension.service.IService;
 import com.yxl.common.utils.PageUtils;
 import com.yxl.smmall.member.entity.UmsMemberReceiveAddressEntity;
 
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -16,5 +17,7 @@ import java.util.Map;
 public interface UmsMemberReceiveAddressService extends IService<UmsMemberReceiveAddressEntity> {
 
     PageUtils queryPage(Map<String, Object> params);
+
+    List<UmsMemberReceiveAddressEntity> getByUserId(Long id);
 }
 

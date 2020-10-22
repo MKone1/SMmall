@@ -19,6 +19,11 @@
         <module>smmall-coupon</module>
         <module>smmall-wares</module>
         <module>smmall-member</module>
+        <module>smmall-gateway</module>
+       <module>smmall-three-service</module>
+        <module>smmall-search</module>
+        <module>smmall-auth-service</module>
+        <module>smmall-cart</module>
 
     </modules>
 

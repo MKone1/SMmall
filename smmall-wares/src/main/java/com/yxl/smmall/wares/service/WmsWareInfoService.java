@@ -2,8 +2,10 @@ package com.yxl.smmall.wares.service;
 
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.yxl.common.utils.PageUtils;
+import com.yxl.common.vo.FareVO;
 import com.yxl.smmall.wares.entity.WmsWareInfoEntity;
 
+import java.math.BigDecimal;
 import java.util.Map;
 
 /**
@@ -16,5 +18,10 @@ import java.util.Map;
 public interface WmsWareInfoService extends IService<WmsWareInfoEntity> {
 
     PageUtils queryPage(Map<String, Object> params);
+
+    PageUtils queryPageByCondition(Map<String, Object> params);
+
+    FareVO getFare(Long addrId);
 }
+
 

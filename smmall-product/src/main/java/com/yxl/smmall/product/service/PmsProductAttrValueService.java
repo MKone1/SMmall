@@ -4,6 +4,7 @@ import com.baomidou.mybatisplus.extension.service.IService;
 import com.yxl.common.utils.PageUtils;
 import com.yxl.smmall.product.entity.PmsProductAttrValueEntity;
 
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -16,5 +17,13 @@ import java.util.Map;
 public interface PmsProductAttrValueService extends IService<PmsProductAttrValueEntity> {
 
     PageUtils queryPage(Map<String, Object> params);
+
+    void saveProductAttr(List<PmsProductAttrValueEntity> collect);
+
+    List<PmsProductAttrValueEntity> baseAttrlistforspu(Long spuId);
+
+
+    void updateSpuAttr(Long spuId, List<PmsProductAttrValueEntity> entities);
+
 }
 

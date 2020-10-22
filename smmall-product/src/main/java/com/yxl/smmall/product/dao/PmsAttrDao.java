@@ -3,6 +3,9 @@ package com.yxl.smmall.product.dao;
 import com.yxl.smmall.product.entity.PmsAttrEntity;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import org.apache.ibatis.annotations.Mapper;
+import org.apache.ibatis.annotations.Param;
+
+import java.util.List;
 
 /**
  * 商品属性
@@ -13,5 +16,6 @@ import org.apache.ibatis.annotations.Mapper;
  */
 @Mapper
 public interface PmsAttrDao extends BaseMapper<PmsAttrEntity> {
-	
+
+    List<Long> selectSearchAttrByIds(@Param("attrIds") List<Long> attrIds);
 }

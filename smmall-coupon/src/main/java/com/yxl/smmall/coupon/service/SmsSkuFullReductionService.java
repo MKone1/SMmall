@@ -1,6 +1,7 @@
 package com.yxl.smmall.coupon.service;
 
 import com.baomidou.mybatisplus.extension.service.IService;
+import com.yxl.common.to.SkuReductionTO;
 import com.yxl.common.utils.PageUtils;
 import com.yxl.smmall.coupon.entity.SmsSkuFullReductionEntity;
 
@@ -16,5 +17,7 @@ import java.util.Map;
 public interface SmsSkuFullReductionService extends IService<SmsSkuFullReductionEntity> {
 
     PageUtils queryPage(Map<String, Object> params);
+
+    void saveSkuReduction(SkuReductionTO skuReductionTO);
 }
 

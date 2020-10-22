@@ -6,13 +6,39 @@ spring:
           uri: https://www.baidu.com
           predicates:
             - Query=url,baidu
-
-        - id: qq_route
-          uri: https://qq.com
+        #        配置第三方服务的网关地址
+        - id: threepatry_route
+          uri: lb://smmall-three-service
           predicates:
-            - Query=url,qq
+            - Path=/api/threepatry/**
+          filters:
+            - RewritePath=/api/threepatry/(?<segment>/?.*), /$\{segment}
+
+        #        配置会员服务的网关地址
+        - id: member_route
+          uri: lb://smmall-member
+          predicates:
+            - Path=/api/member/**
+          filters:
+            - RewritePath=/api/(?<segment>/?.*), /$\{segment}
+
+        #         配置仓库服务的路由地址
+        - id: ware_route
+          uri: lb://smmall-wares
+          predicates:
+            - Path=/api/wares/**
+          filters:
+            - RewritePath=/api/(?<segment>/?.*), /$\{segment}
+        #         配置优惠服务的路由地址
+        - id: coupon_route
+          uri: lb://smmall-coupon
+          predicates:
+            - Path=/api/coupon/**
+          filters:
+            - RewritePath=/api/(?<segment>/?.*), /$\{segment}
 
 
+        #      商品信息的路由地址
         - id: product_route
           uri: lb://smmall-product
           predicates:
@@ -20,20 +46,54 @@ spring:
           filters:
             - RewritePath=/api/(?<segment>/?.*), /$\{segment}
 
+
+        #        检索服务路由地址
+        - id: smmall-search
+          uri: lb://smmall-search
+          predicates:
+            - Path=/api/search/**
+          filters:
+            - RewritePath=/api/(?<segment>/?.*), /$\{segment}
+
+
+
           #         这里由于优先级问题，会被路由到Admin_route,需要设置优先级，
           #          将精确路由放在高优先级，模糊路由放在低优先级
           #          这里配置的网关是配置服务product请求
-
+        #配置人人
         - id: admin_route
           uri: lb://renren-fast
-#          lb表示的是负载均衡，后接的是Nacos中注册的微服务ID
+          #          lb表示的是负载均衡，后接的是Nacos中注册的微服务ID
           predicates:
             - Path=/api/**
           filters:
             - RewritePath=/api/(?<segment>/?.*), /renren-fast/$\{segment}
 
+        - id: smmall_host_route
+          uri: lb://smmall-product
+          predicates:
+            - Host=smmall.com,item.smmall.com
 
+        - id: smmall_search_route
+          uri: lb://smmall-search
+          predicates:
+            - Host=search.smmall.com
+#        认证服务网关路由
+        - id: smmall_auth_route
+          uri: lb://smmall-auth-service
+          predicates:
+            - Host=login.smmall.com,reg.smmall.com
 
+#         购物车服务网关路由
+        - id: smmall_cart_route
+          uri: lb://smmall-cart
+          predicates:
+            - Host=cart.smmall.com
+#        订单系统网关路由
+        - id: smmall_order_route
+          uri: lb://smmall-order
+          predicates:
+            - Host=order.smmall.com
 #前端项目：/api
 #http://localhost:88/api/captcha.jpg     http://localhost:8080/renren-fast/captcha.jpg
 #http://localhost:88/api/product/pmscategory/list/tree  http://localhost://10000/api/product/pmscategory/list/tree

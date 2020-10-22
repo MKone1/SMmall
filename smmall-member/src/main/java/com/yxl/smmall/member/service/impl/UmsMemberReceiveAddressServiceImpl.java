@@ -1,6 +1,8 @@
 package com.yxl.smmall.member.service.impl;
 
 import org.springframework.stereotype.Service;
+
+import java.util.List;
 import java.util.Map;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
@@ -24,6 +26,13 @@ public class UmsMemberReceiveAddressServiceImpl extends ServiceImpl<UmsMemberRec
         );
 
         return new PageUtils(page);
+    }
+
+    @Override
+    public List<UmsMemberReceiveAddressEntity> getByUserId(Long id) {
+        List<UmsMemberReceiveAddressEntity> memberAdd = this.list(new QueryWrapper<UmsMemberReceiveAddressEntity>().eq("member_id", id));
+
+        return memberAdd;
     }
 
 }

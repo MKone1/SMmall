@@ -3,12 +3,9 @@ package com.yxl.smmall.coupon.controller;
 import java.util.Arrays;
 import java.util.Map;
 
+import com.yxl.common.to.SkuReductionTO;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import com.yxl.smmall.coupon.entity.SmsSkuFullReductionEntity;
 import com.yxl.smmall.coupon.service.SmsSkuFullReductionService;
@@ -33,12 +30,12 @@ public class SmsSkuFullReductionController {
     /**
      * 列表
      */
-    @RequestMapping("/list")
+    @PostMapping("/saveinfo")
    // @RequiresPermissions("coupon:smsskufullreduction:list")
-    public R list(@RequestParam Map<String, Object> params){
-        PageUtils page = smsSkuFullReductionService.queryPage(params);
+    public R saceinfo (@RequestBody SkuReductionTO skuReductionTO){
 
-        return R.ok().put("page", page);
+smsSkuFullReductionService.saveSkuReduction(skuReductionTO);
+        return R.ok();
     }
 
 

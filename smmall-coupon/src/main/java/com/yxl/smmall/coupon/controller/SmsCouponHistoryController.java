@@ -29,7 +29,9 @@ import com.yxl.common.utils.R;
 public class SmsCouponHistoryController {
     @Autowired
     private SmsCouponHistoryService smsCouponHistoryService;
-
+    /**
+     * http://localhost:88/api/coupon/couponhistory/list?t=1602212436698&page=1&limit=10&key=
+     */
     /**
      * 列表
      */

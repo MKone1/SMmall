@@ -1,11 +1,11 @@
 package com.yxl.smmall.product.entity;
 
+import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
+import lombok.Data;
 
 import java.io.Serializable;
-import java.util.Date;
-import lombok.Data;
 
 /**
  * 属性分组
@@ -44,5 +44,9 @@ public class PmsAttrGroupEntity implements Serializable {
 	 * 所属分类id
 	 */
 	private Long catelogId;
-
+	/**
+	 * 完整的分类路径
+	 */
+	@TableField(exist = false)
+	private Long[] categoryPath;
 }

@@ -1,19 +1,19 @@
 package com.yxl.smmall.wares.controller;
 
-import java.util.Arrays;
-import java.util.Map;
-
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
-
-import com.yxl.smmall.wares.entity.WmsWareSkuEntity;
-import com.yxl.smmall.wares.service.WmsWareSkuService;
+import com.yxl.common.exception.BizCodeEnume;
 import com.yxl.common.utils.PageUtils;
 import com.yxl.common.utils.R;
+import com.yxl.common.vo.SkuHasStockVO;
+import com.yxl.common.vo.WareSkuLockVo;
+import com.yxl.smmall.wares.entity.WmsWareSkuEntity;
+import com.yxl.smmall.wares.excrption.NoStockException;
+import com.yxl.smmall.wares.service.WmsWareSkuService;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.Arrays;
+import java.util.List;
+import java.util.Map;
 
 
 
@@ -30,13 +30,43 @@ public class WmsWareSkuController {
     @Autowired
     private WmsWareSkuService wmsWareSkuService;
 
+    //查询Sku是否有库存，通过调用远程服务
+    @PostMapping("/hasstock")
+    public R getSkusHasStock(@RequestBody List<Long> skuIdList) {
+        System.out.println("skuIdList:" + skuIdList.size());
+        //sku_id ,stock
+        List<SkuHasStockVO> vos = wmsWareSkuService.getSkusHasStock(skuIdList);
+
+        return R.ok().setData(vos);
+    }
+
+    /**
+     * 锁库存服务
+     *
+     * @param vo
+     * @return
+     */
+    @PostMapping("/lock/order")
+    public R orderLockStock(@RequestBody WareSkuLockVo vo) {
+        try{
+            Boolean lock = wmsWareSkuService.orderlockstock(vo);
+            return R.ok();
+        }catch (NoStockException e){
+            return R.error(BizCodeEnume.ITEM_OF_WARES_EXCEPTION.getCode(),BizCodeEnume.ITEM_OF_WARES_EXCEPTION.getMsg());
+        }
+
+
+
+    }
+
+
     /**
      * 列表
      */
     @RequestMapping("/list")
-   // @RequiresPermissions("wares:wmswaresku:list")
-    public R list(@RequestParam Map<String, Object> params){
-        PageUtils page = wmsWareSkuService.queryPage(params);
+    // @RequiresPermissions("wares:wmswaresku:list")
+    public R list(@RequestParam Map<String, Object> params) {
+        PageUtils page = wmsWareSkuService.queryPageByCondition(params);
 
         return R.ok().put("page", page);
     }

@@ -92,5 +92,17 @@ public class UmsMemberEntity implements Serializable {
 	 * 注册时间
 	 */
 	private Date createTime;
+	/**
+	 * 社交登陆的唯一ID
+	 */
+	private String socialUid;
+	/**
+	 * 社交登录令牌
+	 */
+	private String accessToken;
+	/**
+	 * 令牌的过期时间
+	 */
+	private Long expiresIn;
 
 }

@@ -1,0 +1,23 @@
+spring:
+  cloud:
+    nacos:
+      discovery:
+        server-addr: 127.0.0.1:8848
+  application:
+    name: smmall-auth-service
+  thymeleaf:
+    cache: false
+  redis:
+    host: 192.168.43.99
+    port: 6379
+    password: 123456
+
+  port: 9999
+  session:
+    store-type: redis
+
+server:
+  servlet:
+    session:
+      timeout: 30m
+

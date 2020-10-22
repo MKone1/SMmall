@@ -3,13 +3,15 @@ package com.yxl.smmall.member.controller;
 import java.util.Arrays;
 import java.util.Map;
 
+import com.yxl.common.exception.BizCodeEnume;
+import com.yxl.common.vo.SocialLoginVo;
+import com.yxl.smmall.member.exception.PhoneExsitException;
+import com.yxl.smmall.member.exception.UsernameExsitExcepation;
 import com.yxl.smmall.member.feign.CouponFeginService;
+import com.yxl.smmall.member.vo.MemberLoginVo;
+import com.yxl.smmall.member.vo.MemberRegisterVo;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import com.yxl.smmall.member.entity.UmsMemberEntity;
 import com.yxl.smmall.member.service.UmsMemberService;
@@ -44,6 +46,56 @@ public class UmsMemberController {
         R membercoupons = couponFeginService.membercoupons();
 
         return R.ok().put("member",memberEntity).put("coupons",membercoupons.get("coupons"));
+    }
+
+    /**
+     * 注册
+     * @param memberRegisterVo
+     * @return
+     */
+    @PostMapping("/register")
+    public R register( @RequestBody MemberRegisterVo memberRegisterVo){
+        try{
+            umsMemberService.register(memberRegisterVo);
+        }catch (PhoneExsitException e){
+            R.error(BizCodeEnume.PHONE_EXSIT_EXCEPTION.getCode(),BizCodeEnume.PHONE_EXSIT_EXCEPTION.getMsg());
+        }catch (UsernameExsitExcepation e){
+            R.error(BizCodeEnume.USERNAME_EXSIT_EXCEPTION.getCode(),BizCodeEnume.USERNAME_EXSIT_EXCEPTION.getMsg());
+        }
+        return R.ok();
+    }
+
+    /**
+     *
+     * @param memberLoginVo
+     * @return
+     */
+    @PostMapping("/login")
+    public R login(@RequestBody  MemberLoginVo memberLoginVo){
+       UmsMemberEntity memberEntity =  umsMemberService.login(memberLoginVo);
+       if (memberEntity != null){
+           return R.ok().setData(memberEntity);
+       }else{
+           return R.error(BizCodeEnume.USERNAMEORPASSWORD_EXCEPTION.getCode(),BizCodeEnume.USERNAMEORPASSWORD_EXCEPTION.getMsg());
+       }
+
+    }
+
+    /**
+     * 社交登录
+     * @param socialLoginVo
+     * @return
+     */
+    @PostMapping("/oauth/login")
+    public R oauthLogin(@RequestBody SocialLoginVo socialLoginVo) throws Exception {
+        //实现对如果是第一次登陆的用户的登陆以及注册
+            UmsMemberEntity memberEntity =  umsMemberService.login(socialLoginVo);
+            if (memberEntity != null){
+                return R.ok().setData(memberEntity);
+            }else{
+                return R.error(BizCodeEnume.LOGIN_PASSWORD_INVAILD_EXCEPTION.getCode(),BizCodeEnume.LOGIN_PASSWORD_INVAILD_EXCEPTION.getMsg());
+            }
+
     }
     /**
      * 列表

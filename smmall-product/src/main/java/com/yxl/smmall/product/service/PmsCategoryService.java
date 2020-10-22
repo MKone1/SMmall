@@ -3,6 +3,7 @@ package com.yxl.smmall.product.service;
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.yxl.common.utils.PageUtils;
 import com.yxl.smmall.product.entity.PmsCategoryEntity;
+import com.yxl.smmall.product.vo.Catelog2VO;
 
 import java.util.List;
 import java.util.Map;
@@ -21,5 +22,14 @@ public interface PmsCategoryService extends IService<PmsCategoryEntity> {
     List<PmsCategoryEntity> listWith();
 
     void removeMebuById(List<Long> asList);
+
+    Long[] findCatelogPath(Long catelogId);
+
+    void updateCascade(PmsCategoryEntity pmsCategory);
+
+    List<PmsCategoryEntity> getLavelCategory();
+
+    Map<String,   List<Catelog2VO>> getCategoryJson();
+
 }
 
