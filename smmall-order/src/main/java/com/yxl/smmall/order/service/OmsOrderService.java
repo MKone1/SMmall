@@ -27,5 +27,7 @@ public interface OmsOrderService extends IService<OmsOrderEntity> {
     SubmitOrderResponseVO submitOrder(OrderSubmitVO vo);
 
     OmsOrderEntity getOrderByOrderSn(String s);
+
+    void closeOrder(OmsOrderEntity order);
 }
 

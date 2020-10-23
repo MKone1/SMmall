@@ -37,7 +37,7 @@ import java.util.Map;
 import java.util.stream.Collectors;
 
 /**
- * 库存解锁的场景：
+ * TODO:库存解锁的场景：
  * 1，下订单成功，订单过期没有支付系统自动取消，被用户手动取消，都要解锁库存
  * 2，下订单成功，库存锁定成功，接下来的业务嗲用失败，导致订单回滚，之前锁定的库存就要自动解锁
  */
@@ -75,9 +75,13 @@ public class WmsWareSkuServiceImpl extends ServiceImpl<WmsWareSkuDao, WmsWareSku
      */
 
     private void unlockedStock(Long skuId, Long wareId, Integer lockNumber, Long taskDetail) {
+        //库存解锁
         wmsWareSkuDao.unlockStock(skuId, wareId,lockNumber);
-
-
+        //更新库存工作单的状态
+        WmsWareOrderTaskDetailEntity entity = new WmsWareOrderTaskDetailEntity();
+        entity.setId(taskDetail);
+        entity.setLockStatus(2);
+        wmsWareOrderTaskDetailService.updateById(entity);
     }
 
 
@@ -226,7 +230,10 @@ public class WmsWareSkuServiceImpl extends ServiceImpl<WmsWareSkuDao, WmsWareSku
 
                 if (data == null || data.getStatus() == OrderStatusEnum.CANCLED.getCode()) {
                     //订单应尽被取消，才能解锁库存
-                    unlockedStock(byId.getSkuId(), byId.getWareId(), byId.getSkuNum(), toId);
+                    if (byId.getLockStatus() == 1){
+                        unlockedStock(byId.getSkuId(), byId.getWareId(), byId.getSkuNum(), toId);
+                    }
+
                 } else {
                     //消息拒绝以后重新放在队列里面，让别人继续消费解锁
                     throw new RuntimeException("远程服务失败");
@@ -237,6 +244,24 @@ public class WmsWareSkuServiceImpl extends ServiceImpl<WmsWareSkuDao, WmsWareSku
         }
 
 
+    }
+
+    /**
+     * 防止订单服务卡顿，导致订单状态消息一直改不了，库存消息由先到达，查订单状态新建，什么都不做就过来
+     * 导致卡顿的订单永远也解不了锁
+     * @param orderVo
+     */
+    @Override
+    public void unlockStock(OrderVo orderVo) {
+        String orderSn = orderVo.getOrderSn();
+        //为了防止重复解锁库存，先查一下库存的状态
+       WmsWareOrderTaskEntity entity =  wmsWareOrderTaskService.getOrderTaskByOrderSn(orderSn);
+        Long id = entity.getId();
+        List<WmsWareOrderTaskDetailEntity> list = wmsWareOrderTaskDetailService.list(new QueryWrapper<WmsWareOrderTaskDetailEntity>().eq("task_id", id).eq("lock_status", 1));
+        for (WmsWareOrderTaskDetailEntity wmsWareOrderTaskDetailEntity : list) {
+            unlockedStock(wmsWareOrderTaskDetailEntity.getSkuId(),wmsWareOrderTaskDetailEntity.getWareId(),wmsWareOrderTaskDetailEntity.getSkuNum(),wmsWareOrderTaskDetailEntity.getId());
+
+        }
     }
 
 }

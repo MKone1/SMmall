@@ -26,6 +26,7 @@ import com.yxl.smmall.order.service.OmsOrderService;
 import com.yxl.smmall.order.to.OrderCreateTo;
 import com.yxl.smmall.order.vo.SubmitOrderResponseVO;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.data.redis.core.script.DefaultRedisScript;
@@ -206,6 +207,7 @@ public class OmsOrderServiceImpl extends ServiceImpl<OmsOrderDao, OmsOrderEntity
                 if (r.getCode() == 0) {
                     // 锁定成功
                     submitOrderResponseVO.setOmsOrderEntity(order.getOrderEntity());
+                    //TODO：订单创建成功发送消息给MQ
                     rabbitTemplate.convertAndSend("order-event-exchange", "order.create.order", order.getOrderEntity());
                     return submitOrderResponseVO;
                 } else {
@@ -232,6 +234,26 @@ return order_sn;
     }
 
     /**
+     * 关闭订单
+     * @param order
+     */
+    @Override
+    public void closeOrder(OmsOrderEntity order) {
+        //查询当前订单的最新的订单状态
+        OmsOrderEntity entity = this.getById(order.getId());
+        if(entity.getStatus() == OrderStatusEnum.CREATE_NEW.getCode()){
+            //支付超时;关闭订单
+            OmsOrderEntity orderEntity = new OmsOrderEntity();
+            orderEntity.setStatus(OrderStatusEnum.CANCLED.getCode());
+            this.updateById(orderEntity);
+            OrderVo orderVo = new OrderVo();
+            BeanUtils.copyProperties(entity,orderVo);
+            //更新数据库订单，发送消息给MQ
+            rabbitTemplate.convertAndSend("order-event-exchange","order.releas.other",orderVo);
+        }
+    }
+
+    /**
      * 创建订单
      *
      * @return
@@ -246,10 +268,6 @@ return order_sn;
         List<OmsOrderItemEntity> omsOrderItemEntities = buildOrderItems(ordersn);
         orderCreateTo.setOrderItemList(omsOrderItemEntities);
         computePrice(omsOrderEntity, omsOrderItemEntities);
-
-
-        //
-
 
         return orderCreateTo;
     }

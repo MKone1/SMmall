@@ -16,5 +16,7 @@ import java.util.Map;
 public interface WmsWareOrderTaskService extends IService<WmsWareOrderTaskEntity> {
 
     PageUtils queryPage(Map<String, Object> params);
+
+    WmsWareOrderTaskEntity getOrderTaskByOrderSn(String orderSn);
 }
 

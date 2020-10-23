@@ -4,6 +4,7 @@ import com.baomidou.mybatisplus.extension.service.IService;
 import com.yxl.common.to.mq.SrockLockedTo;
 import com.yxl.common.utils.PageUtils;
 import com.yxl.common.vo.LockStockVo;
+import com.yxl.common.vo.OrderVo;
 import com.yxl.common.vo.SkuHasStockVO;
 import com.yxl.common.vo.WareSkuLockVo;
 import com.yxl.smmall.wares.entity.WmsWareSkuEntity;
@@ -29,5 +30,7 @@ public interface WmsWareSkuService extends IService<WmsWareSkuEntity> {
  Boolean orderlockstock(WareSkuLockVo vo);
 
     void unlockStock(SrockLockedTo to);
+
+    void unlockStock(OrderVo orderVo);
 }
 
