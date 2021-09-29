@@ -24,7 +24,7 @@
         <module>smmall-search</module>
         <module>smmall-auth-service</module>
         <module>smmall-cart</module>
-
+        <module>smmall-scekill</module>
     </modules>
 
 </project>

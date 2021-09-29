@@ -14,25 +14,25 @@ public class ThreadTest {
      */
     public static void main(String[] args) throws ExecutionException, InterruptedException {
         System.out.println("main........start");
-//        CompletableFuture<Void> voidCompletableFuture = CompletableFuture.runAsync(() -> {
-//            System.out.println("当前线程：" + Thread.currentThread().getId());
-//            int i = 10 / 2;
-//            System.out.println("运行结果" + i);
-//
-//        }, executorService);
+        CompletableFuture<Void> voidCompletableFuture = CompletableFuture.runAsync(() -> {
+            System.out.println("当前线程：" + Thread.currentThread().getId());
+            int i = 10 / 2;
+            System.out.println("运行结果" + i);
 
-//        CompletableFuture<Integer> integerCompletableFuture = CompletableFuture.supplyAsync(() -> {
-//            System.out.println("当前线程：" + Thread.currentThread().getId());
-//            int i = 10 / 0;
-//            System.out.println("运行结果" + i);
-//            return i;
-//        }, executorService).whenComplete((result,throwable)->{
-//            //可以感应异常，但是没法修改返回数据
-//            System.out.println("异步任务成功完成"+result+"异常时"+throwable);
-//        }).exceptionally(throwable -> {
-//            //感知异常，同时返回数据
-//            return 100;
-//        });
+        }, executorService);
+
+        CompletableFuture<Integer> integerCompletableFuture = CompletableFuture.supplyAsync(() -> {
+            System.out.println("当前线程：" + Thread.currentThread().getId());
+            int i = 10 / 0;
+            System.out.println("运行结果" + i);
+            return i;
+        }, executorService).whenComplete((result,throwable)->{
+            //可以感应异常，但是没法修改返回数据
+            System.out.println("异步任务成功完成"+result+"异常时"+throwable);
+        }).exceptionally(throwable -> {
+            //感知异常，同时返回数据
+            return 100;
+        });
 //        System.out.println("main .......end");
 //        Integer integer = integerCompletableFuture.get();
 //        System.out.println("integer"+integer);
@@ -70,18 +70,18 @@ public class ThreadTest {
  *             return res+"";
  *         },executorService);
  */
-        CompletableFuture<Integer> future01 = CompletableFuture.supplyAsync(() -> {
-            System.out.println("当前线程：" + Thread.currentThread().getId());
-            int i = 10 / 2;
-            System.out.println("运行结果" + i);
-            return i;
-        }, executorService);
-        CompletableFuture<Integer> future02 = CompletableFuture.supplyAsync(() -> {
-            System.out.println("当前线程：" + Thread.currentThread().getId());
-            int i = 10 / 5;
-            System.out.println("运行结果" + i);
-            return i;
-        }, executorService);
+//        CompletableFuture<Integer> future01 = CompletableFuture.supplyAsync(() -> {
+//            System.out.println("当前线程：" + Thread.currentThread().getId());
+//            int i = 10 / 2;
+//            System.out.println("运行结果" + i);
+//            return i;
+//        }, executorService);
+//        CompletableFuture<Integer> future02 = CompletableFuture.supplyAsync(() -> {
+//            System.out.println("当前线程：" + Thread.currentThread().getId());
+//            int i = 10 / 5;
+//            System.out.println("运行结果" + i);
+//            return i;
+//        }, executorService);
 //        不能获取返回值
 //        future01.runAfterBothAsync(future02,()->{
 //            System.out.println("任务三开始");

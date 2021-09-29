@@ -39,7 +39,7 @@ import java.util.stream.Collectors;
 /**
  * TODO:库存解锁的场景：
  * 1，下订单成功，订单过期没有支付系统自动取消，被用户手动取消，都要解锁库存
- * 2，下订单成功，库存锁定成功，接下来的业务嗲用失败，导致订单回滚，之前锁定的库存就要自动解锁
+ * 2，下订单成功，库存锁定成功，接下来的业务调用失败，导致订单回滚，之前锁定的库存就要自动解锁
  */
 
 @Service("wmsWareSkuService")
@@ -125,8 +125,9 @@ public class WmsWareSkuServiceImpl extends ServiceImpl<WmsWareSkuDao, WmsWareSku
     }
 
     /**
+     *
      * 锁库存
-     * 库存几所的场景：
+     * 库存解锁的场景：
      * 1，下订单那成功，订单过期没有支付被系统自动取消，被用户手动取消，都要解锁库存
      * 2.下订单成功，所库存成功，业务失败，导致订单回滚 之前锁定的库存解锁
      *
@@ -145,7 +146,7 @@ public class WmsWareSkuServiceImpl extends ServiceImpl<WmsWareSkuDao, WmsWareSku
         entity.setOrderSn(vo.getOrderSn());
         wmsWareOrderTaskService.save(entity);
 
-        //1,按照下单的收货地址，找到一个究竟仓库，锁定库存
+        //1,按照下单的收货地址，找到一个就近仓库，锁定库存
         //1，找到每一个商品在那个 仓库都有库存
         List<OrderItemVo> locks = vo.getLocks();
         List<SkuWareHasItem> collect = locks.stream().map(orderItemVo -> {
@@ -188,9 +189,8 @@ public class WmsWareSkuServiceImpl extends ServiceImpl<WmsWareSkuDao, WmsWareSku
                     stockLockedTO.setDetail(stockDetailTO);
                     rabbitTemplate.convertAndSend("stock-event-exchange", "stock.locked", stockLockedTO);
                     break;
-                } else {
-                    //表示锁定库存失败 重试下一个库存
                 }
+                    //表示锁定库存失败 重试下一个库存
             }
             if (skuStocked == false) {
                 //当所有库存都锁定失败，表示该商品在所有库存中没有库存了；

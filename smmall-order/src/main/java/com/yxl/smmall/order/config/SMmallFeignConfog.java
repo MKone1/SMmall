@@ -30,8 +30,6 @@ public class SMmallFeignConfog {
                   requestTemplate.header("Cookie",cookie);
               }
 
-
-
             }
         };
     }

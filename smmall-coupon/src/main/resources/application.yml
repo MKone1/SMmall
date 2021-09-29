@@ -1,4 +1,8 @@
-#spring:
+  public  Integer  id;//
+    public  Integer  seckill_pro_id;//
+    public  Date  seckill_time;//
+    public  Integer  seckill_num;//
+  public  BigDecimal  seckill_price;//#spring:
 #          datasource:
 #            username: root
 #            password: root
